@@ -42,7 +42,7 @@ end
 -- -------------------------------------------------------------------------
 
 local plutoFrame = CreateFrame("Frame", nil, UIParent)
-plutoFrame:SetPoint("CENTER")
+--plutoFrame:SetPoint("CENTER")
 plutoFrame:SetSize(175, 40)
 plutoFrame:RegisterEvent("ADDON_LOADED")
 
@@ -52,14 +52,35 @@ plutoFrame:RegisterEvent("ADDON_LOADED")
 function plutoFrame:OnEvent( wEvent, arg1 )
 	PrintDebug( "plutoFrame:OnEvent() called" )
 		
-	if ( wEvent == "ADDON_LOADED" ) then
-		PrintDebug( PlutoFrame_Point )
-		PrintDebug( PlutoFrame_RelPoint )
-		PrintDebug( PlutoFrame_xOffset )
-		PrintDebug( PlutoFrame_yOffset )
+	if ( nil == Pluto_FirstTime ) then
+		Pluto_FirstTime = false
+		plutoFrame:SetPoint("CENTER")
 		
-		plutoFrame:SetPoint( PlutoFrame_Point, UIParent, PlutoFrame_RelPoint,
+		PlutoFrame_Point, PlutoFrame_RelTo, PlutoFrame_RelPoint, 
+			PlutoFrame_xOffset, PlutoFrame_yOffset = plutoFrame:GetPoint()
+			
+		plutoFrame:Show()
+		PlutoFrame_Show = true
+		
+		return
+	end 
+	
+	if ( (wEvent == "ADDON_LOADED") and
+			(nil ~= PlutoFrame_Point) and 
+			(nil ~= PlutoFrame_RelPoint) and
+			(nil ~= PlutoFrame_xOffset) and
+			(nil ~= PlutoFrame_yOffset) and
+			(nil ~= PlutoFrame_Show) ) then
+		
+		plutoFrame:SetPoint( PlutoFrame_Point, "UIParent",
 								PlutoFrame_xOffset, PlutoFrame_yOffset )
+		
+								
+		if ( PlutoFrame_Show ) then 
+			plutoFrame:Show()
+		else
+			plutoFrame:Hide()
+		end
  	end
  end
 
@@ -164,8 +185,10 @@ SLASH_PLUTO1 = "/pluto"
 SlashCmdList["PLUTO"] = function()
 	if plutoFrame:IsShown() then
 		plutoFrame:Hide()
+		PlutoFrame_Show = false
 	else
 		plutoFrame:Show()
+		PlutoFrame_Show = true
 	end
 end
 
