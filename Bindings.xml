@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="PLUTO_TANKATTACK" runOnUp="true" header="PLUTO" default="[">		
+		if keystate == "up" then GoGoTank() end
+	</Binding>
+</Bindings>

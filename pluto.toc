@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: Pluto
+## Notes: Easier interface for dungeon running with playerbots.
+## Author: Grant Guenther
+## Version: 1.0.0
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
+Bindings.lua
+pluto.lua
