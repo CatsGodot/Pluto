@@ -79,7 +79,7 @@ plutoBtn1:SetText("TA")
 plutoBtn1:SetScript("OnClick", function(self, button, down)
 	GoGoTank()
 end)
-plutoBtn1:RegisterForClicks("AnyDown", "AnyUp")
+plutoBtn1:RegisterForClicks("AnyUp")
 
 
 local plutoBtn2 = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
@@ -87,9 +87,19 @@ plutoBtn2:SetPoint("LEFT", 84, 0)
 plutoBtn2:SetSize(42, 40)
 plutoBtn2:SetText("Su")
 plutoBtn2:SetScript("OnClick", function(self, button, down)
-	print("Pressed", button, down and "down" or "up")
+	Summon()
 end)
-plutoBtn2:RegisterForClicks("AnyDown", "AnyUp")
+plutoBtn2:RegisterForClicks("AnyUp")
+
+
+local plutoBtn3 = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
+plutoBtn3:SetPoint("LEFT", 130, 0)
+plutoBtn3:SetSize(42, 40)
+plutoBtn3:SetText("In")
+plutoBtn3:SetScript("OnClick", function(self, button, down)
+	InitPlayer()
+end)
+plutoBtn2:RegisterForClicks("AnyUp")
 
 plutoFrame:Hide()
 
@@ -107,6 +117,20 @@ end
 function GoGoTank()
 	PrintDebug( "Pluto::GoGoTank() called" )
 	SendPartyMessage( "@tank attack" )
+end
+
+-- -------------------------------------------------------------------------
+
+function Summon()
+	PrintDebug( "Pluto::Summon() called" )
+	SendPartyMessage( "summon" )
+end
+
+-- -------------------------------------------------------------------------
+
+function InitPlayer()
+	PrintDebug( "Pluto::InitPlayer() called" )
+	SendPartyMessage( ".playerbot bot init=auto" )
 end
 
 -- -------------------------------------------------------------------------
