@@ -5,6 +5,7 @@
 ## Version: 1.0.0
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
+## SavedVariablesPerCharacter: PlutoFrame_Point, PlutoFrame_RelPoint, PlutoFrame_xOffset, PlutoFrame_yOffset
 
 Bindings.lua
 pluto.lua

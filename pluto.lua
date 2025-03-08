@@ -44,6 +44,29 @@ end
 local plutoFrame = CreateFrame("Frame", nil, UIParent)
 plutoFrame:SetPoint("CENTER")
 plutoFrame:SetSize(175, 40)
+plutoFrame:RegisterEvent("ADDON_LOADED")
+
+-- -------------------------------------------------------------------------
+-- -------------------------------------------------------------------------
+
+function plutoFrame:OnEvent( wEvent, arg1 )
+	PrintDebug( "plutoFrame:OnEvent() called" )
+		
+	if ( wEvent == "ADDON_LOADED" ) then
+		PrintDebug( PlutoFrame_Point )
+		PrintDebug( PlutoFrame_RelPoint )
+		PrintDebug( PlutoFrame_xOffset )
+		PrintDebug( PlutoFrame_yOffset )
+		
+		plutoFrame:SetPoint( PlutoFrame_Point, UIParent, PlutoFrame_RelPoint,
+								PlutoFrame_xOffset, PlutoFrame_yOffset )
+ 	end
+ end
+
+-- -------------------------------------------------------------------------
+-- -------------------------------------------------------------------------
+
+plutoFrame:SetScript( "OnEvent", plutoFrame.OnEvent );
 
 plutoFrame:EnableMouse(true)
 plutoFrame:SetMovable(true)
@@ -53,6 +76,10 @@ plutoFrame:SetScript("OnDragStart", function(self)
 end)
 plutoFrame:SetScript("OnDragStop", function(self)
 	self:StopMovingOrSizing()
+	
+	PlutoFrame_Point, PlutoFrame_RelTo, PlutoFrame_RelPoint, 
+		PlutoFrame_xOffset, PlutoFrame_yOffset = plutoFrame:GetPoint()
+	
 end)
 
 plutoFrame:SetScript("OnShow", function()
@@ -102,9 +129,6 @@ end)
 plutoBtn2:RegisterForClicks("AnyUp")
 
 plutoFrame:Hide()
-
--- -------------------------------------------------------------------------
--- -------------------------------------------------------------------------
 
 local function SendPartyMessage( sMessage )
 	PrintDebug( "Pluto::SendPartyMessage() called" )	
