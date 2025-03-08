@@ -2,4 +2,8 @@
 	<Binding name="PLUTO_TANKATTACK" runOnUp="true" header="PLUTO" default="[">		
 		if keystate == "up" then GoGoTank() end
 	</Binding>
+	
+	<Binding name="PLUTO_INITPLAYER" runOnUp="true" header="PLUTO" default="`">		
+		if keystate == "up" then InitPlayer() end
+	</Binding>
 </Bindings>
