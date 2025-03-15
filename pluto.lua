@@ -4,7 +4,7 @@
 
 -- -------------------------------------------------------------------------
 
-local gsPlutoVers = "1.0"
+local gsPlutoVers = "1.1"
 local gsDebugOn = false
 
 --  ........................................................................
@@ -41,12 +41,76 @@ end
 -- -------------------------------------------------------------------------
 -- -------------------------------------------------------------------------
 
-local plutoFrame = CreateFrame("Frame", nil, UIParent)
---plutoFrame:SetPoint("CENTER")
-plutoFrame:SetSize(175, 40)
-plutoFrame:RegisterEvent("ADDON_LOADED")
+local plutoFrame = CreateFrame( "Frame", nil, UIParent )
 
 -- -------------------------------------------------------------------------
+-- -------------------------------------------------------------------------
+
+local function CreateThumb()
+	local thumbFrame = CreateFrame("Frame", nil, plutoFrame)
+	thumbFrame:SetPoint("LEFT")
+	thumbFrame:SetSize(32, 40)
+	thumbFrame.tex = thumbFrame:CreateTexture()
+	thumbFrame.tex:SetAllPoints(thumbFrame)
+	thumbFrame.tex:SetTexture("interface/icons/inv_mushroom_11")
+end
+
+-- .........................................................................
+
+local function CreateButton( sTitle, xOffset, wHandler )
+	local btn = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
+	btn:SetPoint( "LEFT", xOffset, 0 )
+	btn:SetSize( 42, 40 )
+	btn:SetText( sTitle )
+	
+	btn:SetScript("OnClick", function(self, button, down)
+		wHandler()
+		end)
+		
+	btn:RegisterForClicks("AnyUp")
+end
+
+-- .........................................................................
+
+local function BuildFrame()
+	plutoFrame:SetSize(175, 40)
+	plutoFrame:RegisterEvent("ADDON_LOADED")
+
+
+	plutoFrame:SetScript( "OnEvent", plutoFrame.OnEvent );
+
+	plutoFrame:EnableMouse(true)
+	plutoFrame:SetMovable(true)
+	plutoFrame:RegisterForDrag("LeftButton")
+	plutoFrame:SetScript("OnDragStart", function(self)
+		self:StartMoving()
+		end)
+	plutoFrame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+	
+		PlutoFrame_Point, PlutoFrame_RelTo, PlutoFrame_RelPoint, 
+			PlutoFrame_xOffset, PlutoFrame_yOffset = plutoFrame:GetPoint()
+	
+		end)
+
+	plutoFrame:SetScript("OnShow", function()
+			PlaySound(808)
+		end)
+
+	plutoFrame:SetScript("OnHide", function()
+			PlaySound(808)
+
+		end)
+
+	CreateThumb()
+	CreateButton( "TA", 38, GoGoTank )
+	CreateButton( "Su", 84, Summon )
+	CreateButton( "In", 130, InitPlayer )
+
+	plutoFrame:Hide()
+
+end
+
 -- -------------------------------------------------------------------------
 
 function plutoFrame:OnEvent( wEvent, arg1 )
@@ -87,69 +151,6 @@ function plutoFrame:OnEvent( wEvent, arg1 )
 -- -------------------------------------------------------------------------
 -- -------------------------------------------------------------------------
 
-plutoFrame:SetScript( "OnEvent", plutoFrame.OnEvent );
-
-plutoFrame:EnableMouse(true)
-plutoFrame:SetMovable(true)
-plutoFrame:RegisterForDrag("LeftButton")
-plutoFrame:SetScript("OnDragStart", function(self)
-	self:StartMoving()
-end)
-plutoFrame:SetScript("OnDragStop", function(self)
-	self:StopMovingOrSizing()
-	
-	PlutoFrame_Point, PlutoFrame_RelTo, PlutoFrame_RelPoint, 
-		PlutoFrame_xOffset, PlutoFrame_yOffset = plutoFrame:GetPoint()
-	
-end)
-
-plutoFrame:SetScript("OnShow", function()
-        PlaySound(808)
-end)
-
-plutoFrame:SetScript("OnHide", function()
-        PlaySound(808)
-
-end)
-
-local plutoThumbFrame = CreateFrame("Frame", nil, plutoFrame)
-plutoThumbFrame:SetPoint("LEFT")
-plutoThumbFrame:SetSize(32, 40)
-plutoThumbFrame.tex = plutoThumbFrame:CreateTexture()
-plutoThumbFrame.tex:SetAllPoints(plutoThumbFrame)
-plutoThumbFrame.tex:SetTexture("interface/icons/inv_mushroom_11")
-
-
-local plutoBtn1 = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
-plutoBtn1:SetPoint("LEFT", 38, 0)
-plutoBtn1:SetSize(42, 40)
-plutoBtn1:SetText("TA")
-plutoBtn1:SetScript("OnClick", function(self, button, down)
-	GoGoTank()
-end)
-plutoBtn1:RegisterForClicks("AnyUp")
-
-
-local plutoBtn2 = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
-plutoBtn2:SetPoint("LEFT", 84, 0)
-plutoBtn2:SetSize(42, 40)
-plutoBtn2:SetText("Su")
-plutoBtn2:SetScript("OnClick", function(self, button, down)
-	Summon()
-end)
-plutoBtn2:RegisterForClicks("AnyUp")
-
-
-local plutoBtn3 = CreateFrame("Button", nil, plutoFrame, "UIPanelButtonTemplate")
-plutoBtn3:SetPoint("LEFT", 130, 0)
-plutoBtn3:SetSize(42, 40)
-plutoBtn3:SetText("In")
-plutoBtn3:SetScript("OnClick", function(self, button, down)
-	InitPlayer()
-end)
-plutoBtn2:RegisterForClicks("AnyUp")
-
-plutoFrame:Hide()
 
 local function SendPartyMessage( sMessage )
 	PrintDebug( "Pluto::SendPartyMessage() called" )	
@@ -157,14 +158,11 @@ local function SendPartyMessage( sMessage )
 end
 
 -- -------------------------------------------------------------------------
--- -------------------------------------------------------------------------
 
 function GoGoTank()
 	PrintDebug( "Pluto::GoGoTank() called" )
 	SendPartyMessage( "@tank attack" )
 end
-
--- -------------------------------------------------------------------------
 
 function Summon()
 	PrintDebug( "Pluto::Summon() called" )
@@ -180,6 +178,8 @@ end
 
 -- -------------------------------------------------------------------------
 -- -------------------------------------------------------------------------
+
+BuildFrame()
 
 SLASH_PLUTO1 = "/pluto"
 SlashCmdList["PLUTO"] = function()
