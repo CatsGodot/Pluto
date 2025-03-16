@@ -73,8 +73,8 @@ end
 -- .........................................................................
 
 local function BuildFrame()
-	plutoFrame:SetSize(175, 40)
-	plutoFrame:RegisterEvent("ADDON_LOADED")
+	plutoFrame:SetSize( 250, 40 )
+	plutoFrame:RegisterEvent( "ADDON_LOADED" )
 
 
 	plutoFrame:SetScript( "OnEvent", plutoFrame.OnEvent );
@@ -105,7 +105,9 @@ local function BuildFrame()
 	CreateThumb()
 	CreateButton( "TA", 38, GoGoTank )
 	CreateButton( "Su", 84, Summon )
-	CreateButton( "In", 130, InitPlayer )
+	CreateButton( "Init", 130, InitPlayer )
+	CreateButton( "Stay", 176, RedLight )
+	CreateButton( "Flw", 222, GreenLight )
 
 	plutoFrame:Hide()
 
@@ -157,23 +159,39 @@ local function SendPartyMessage( sMessage )
 	SendChatMessage( sMessage, "PARTY", nil, nil ); 
 end
 
--- -------------------------------------------------------------------------
+-- .........................................................................
 
 function GoGoTank()
 	PrintDebug( "Pluto::GoGoTank() called" )
 	SendPartyMessage( "@tank attack" )
 end
 
+-- .........................................................................
+
 function Summon()
 	PrintDebug( "Pluto::Summon() called" )
 	SendPartyMessage( "summon" )
 end
 
--- -------------------------------------------------------------------------
+-- .........................................................................
 
 function InitPlayer()
 	PrintDebug( "Pluto::InitPlayer() called" )
 	SendPartyMessage( ".playerbot bot init=auto" )
+end
+
+-- .........................................................................
+
+function RedLight()
+	PrintDebug( "Pluto::RedLight() called" )
+	SendPartyMessage( "stay" )
+end
+
+-- .........................................................................
+
+function GreenLight()
+	PrintDebug( "Pluto::GreenLight() called" )
+	SendPartyMessage( "follow" )
 end
 
 -- -------------------------------------------------------------------------
